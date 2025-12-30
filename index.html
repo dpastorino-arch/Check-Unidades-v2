@@ -33,7 +33,7 @@
       <!-- LOGO: reemplazar src (URL pública o archivo local) -->
       <img
         id="companyLogo"
-        src="icons/LOGO VDS.jpeg"
+        src="./icons/LOGO VDS.jpeg"
         alt="Logo Empresa"
         class="h-10 w-auto"
       />
@@ -140,18 +140,19 @@
   <script>
     // Unidades en array (mantenible)
     const UNITS = [
-      { key: "alto_vacio",    label: "Equipo Alto Vacío",              formUrl: "https://forms.gle/REEMPLAZAR_ALTO_VACIO" },
-      { key: "vacio",         label: "Equipo Vacío",                   formUrl: "https://forms.gle/REEMPLAZAR_VACIO" },
-      { key: "tractor_hidro", label: "Tractor con Hidrogrúa",          formUrl: "https://forms.gle/REEMPLAZAR_TRACTOR_HIDROGRUA" },
-      { key: "tractor",       label: "Tractor",                        formUrl: "https://forms.gle/REEMPLAZAR_TRACTOR" },
-      { key: "semi",          label: "Semi",                           formUrl: "https://forms.gle/REEMPLAZAR_SEMI" },
-      { key: "hidrocateo",    label: "Equipo de Hidrocateo",           formUrl: "https://forms.gle/REEMPLAZAR_HIDROCATEO" },
-      { key: "portavolquete", label: "Portavolquete (Simple / Doble)", formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSdb4MQuDbuJF01FvPhvHZiuTPj4VdvFt2UuAD4sy4EBwo9HSA/viewform?usp=dialog" },
-      { key: "pickup",        label: "Pick Up",                        formUrl: "https://forms.gle/REEMPLAZAR_PICKUP" },
-      { key: "minipala",      label: "Minipala",                       formUrl: "https://forms.gle/REEMPLAZAR_MINIPALA" },
-      { key: "caldera",       label: "Caldera",                        formUrl: "https://forms.gle/REEMPLAZAR_CALDERA" },
-      { key: "cisterna",      label: "Cisterna",                       formUrl: "https://forms.gle/REEMPLAZAR_CISTERNA" }
-    ];
+  { key: "alto_vacio",    label: "Equipo Alto Vacío",              formUrl: "https://forms.gle/REEMPLAZAR_ALTO_VACIO" },
+  { key: "vacio",         label: "Equipo Vacío",                   formUrl: "https://forms.gle/REEMPLAZAR_VACIO" },
+  { key: "tractor_hidro", label: "Tractor con Hidrogrúa",          formUrl: "https://forms.gle/REEMPLAZAR_TRACTOR_HIDROGRUA" },
+  { key: "tractor",       label: "Tractor",                        formUrl: "https://forms.gle/REEMPLAZAR_TRACTOR" },
+  { key: "semi",          label: "Semi",                           formUrl: "https://forms.gle/REEMPLAZAR_SEMI" },
+  { key: "hidrocateo",    label: "Equipo de Hidrocateo",           formUrl: "https://forms.gle/REEMPLAZAR_HIDROCATEO" },
+  { key: "portavolquete", label: "Portavolquete (Simple / Doble)", formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSdb4MQuDbuJF01FvPhvHZiuTPj4VdvFt2UuAD4sy4EBwo9HSA/viewform" },
+  { key: "pickup",        label: "Pick Up",                        formUrl: "https://forms.gle/REEMPLAZAR_PICKUP" },
+
+  { key: "minipala",      label: "Minipala",                       formUrl: "https://forms.gle/REEMPLAZAR_MINIPALA" },
+  { key: "caldera",       label: "Caldera",                        formUrl: "https://forms.gle/REEMPLAZAR_CALDERA" },
+  { key: "cisterna",      label: "Cisterna",                       formUrl: "https://forms.gle/REEMPLAZAR_CISTERNA" }
+];
 
     const grid = document.getElementById("buttonsGrid");
     document.getElementById("year").textContent = new Date().getFullYear();
