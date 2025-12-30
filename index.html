@@ -42,8 +42,7 @@
         <p class="text-sm text-slate-500">Seleccioná el tipo de vehículo/equipo</p>
       </div>
 
-
-    <!-- Main -->
+  <!-- Main -->
   <main class="max-w-5xl mx-auto px-4 py-10">
     <section class="mb-6">
       <h2 class="text-lg font-semibold mb-2">Menú de unidades</h2>
@@ -51,11 +50,11 @@
         Tocá un botón para abrir el Google Form del checklist correspondiente.
       </p>
       <p class="mt-2 text-xs text-slate-500">
-        Nota: Para volver al menú, usá el Link "https://dpastorino-arch.github.io/Check-Unidades-v2/" que te aparecerá una vez completado y enviado el forms”).
+        Nota: Para volver al menú, usá el link "https://dpastorino-arch.github.io/Check-Unidades-v2/” que figurá una vez completado y enviado el forms.
       </p>
     </section>
-    
-  <!-- Botones -->
+
+    <!-- Botones -->
     <section id="buttonsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></section>
 
     <!-- PWA hint -->
@@ -69,6 +68,59 @@
     </div>
   </main>
 
+  <!-- Modal -->
+  <div id="modalBackdrop" class="hidden fixed inset-0 z-50 bg-slate-900/40 p-4">
+    <div class="mx-auto max-w-2xl rounded-2xl bg-white shadow-xl border border-slate-200 overflow-hidden">
+      <div class="flex items-center justify-between px-5 py-4 border-b border-slate-200">
+        <h3 class="text-base font-semibold">Configuración (links / retorno)</h3>
+        <button id="modalClose" class="rounded-lg px-2 py-1 text-slate-600 hover:bg-slate-100" type="button">✕</button>
+      </div>
+      <div class="p-5 space-y-4 text-sm text-slate-700">
+        <div>
+          <div class="font-semibold">1) Links a Google Forms</div>
+          <p class="mt-1">
+            En el bloque <span class="font-mono bg-slate-100 px-1.5 py-0.5 rounded">const UNITS</span> (abajo),
+            reemplazá <span class="font-mono bg-slate-100 px-1.5 py-0.5 rounded">formUrl</span> por el link real del Form.
+          </p>
+        </div>
+
+        <div>
+          <div class="font-semibold">2) Volver del Form al menú</div>
+          <p class="mt-1">
+            Google Forms no permite “redireccionar automáticamente” al enviar. Las alternativas prácticas son:
+          </p>
+          <ul class="mt-2 list-disc pl-5 space-y-1">
+            <li><span class="font-semibold">Opción recomendada:</span> En cada Form → <span class="font-semibold">Configuración</span> → <span class="font-semibold">Presentación</span> → <span class="font-semibold">Mensaje de confirmación</span>. Pegá un link al menú (la URL donde publiques esta app).</li>
+            <li><span class="font-semibold">Usar el botón Atrás del navegador:</span> si el Form se abre en la misma pestaña, el usuario vuelve con “Atrás”.</li>
+            <li><span class="font-semibold">Abrir en pestaña nueva:</span> (por defecto en esta app) al cerrar esa pestaña, el usuario queda en el menú.</li>
+          </ul>
+          <p class="mt-2 text-xs text-slate-500">
+            Si la app está instalada como PWA, el Form abrirá en el navegador del sistema; el retorno es “Atrás” o cerrar la pestaña.
+          </p>
+        </div>
+
+        <div>
+          <div class="font-semibold">3) Logo</div>
+          <p class="mt-1">
+            En <span class="font-mono bg-slate-100 px-1.5 py-0.5 rounded">&lt;img id="companyLogo"&gt;</span> reemplazá el <span class="font-mono bg-slate-100 px-1.5 py-0.5 rounded">src</span>.
+          </p>
+        </div>
+
+        <div class="rounded-xl bg-amber-50 border border-amber-200 p-4">
+          <div class="font-semibold text-amber-900">Nota PWA</div>
+          <p class="mt-1 text-amber-900/90">
+            Para que “Instalar app” aparezca, publicá esta carpeta por HTTPS (GitHub Pages, Cloudflare Pages, Netlify, etc.).
+          </p>
+        </div>
+      </div>
+      <div class="px-5 py-4 border-t border-slate-200 flex justify-end">
+        <button id="modalOk" class="rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-800" type="button">
+          Entendido
+        </button>
+      </div>
+    </div>
+  </div>
+
   <footer class="border-t border-slate-200 bg-white mt-10">
     <div class="max-w-5xl mx-auto px-4 py-4 text-xs text-slate-500">
       © <span id="year"></span> Checklist de Unidades
@@ -78,18 +130,18 @@
   <script>
     // Unidades en array (mantenible)
     const UNITS = [
-  { key: "alto_vacio",    label: "Equipo Alto Vacío",              formUrl: "https://forms.gle/REEMPLAZAR_ALTO_VACIO" },
-  { key: "vacio",         label: "Equipo Vacío",                   formUrl: "https://forms.gle/REEMPLAZAR_VACIO" },
-  { key: "tractor_hidro", label: "Tractor con Hidrogrúa",          formUrl: "https://forms.gle/REEMPLAZAR_TRACTOR_HIDROGRUA" },
-  { key: "tractor",       label: "Tractor",                        formUrl: "https://forms.gle/REEMPLAZAR_TRACTOR" },
-  { key: "semi",          label: "Semi",                           formUrl: "https://forms.gle/REEMPLAZAR_SEMI" },
-  { key: "hidrocateo",    label: "Equipo de Hidrocateo",           formUrl: "https://forms.gle/REEMPLAZAR_HIDROCATEO" },
-  { key: "portavolquete", label: "Portavolquete (Simple / Doble)", formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSdb4MQuDbuJF01FvPhvHZiuTPj4VdvFt2UuAD4sy4EBwo9HSA/viewform" },
-  { key: "pickup",        label: "Pick Up",                        formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSc8rsibIvTFdqQ-MTl6gsD_wf4A7nbWM6Or5NBqXiORxqBS6w/viewform" },
-  { key: "minipala",      label: "Minipala",                       formUrl: "https://forms.gle/REEMPLAZAR_MINIPALA" },
-  { key: "caldera",       label: "Caldera",                        formUrl: "https://forms.gle/REEMPLAZAR_CALDERA" },
-  { key: "cisterna",      label: "Cisterna",                       formUrl: "https://forms.gle/REEMPLAZAR_CISTERNA" }
-];
+      { key: "alto_vacio",    label: "Equipo Alto Vacío",              formUrl: "https://forms.gle/REEMPLAZAR_ALTO_VACIO" },
+      { key: "vacio",         label: "Equipo Vacío",                   formUrl: "https://forms.gle/REEMPLAZAR_VACIO" },
+      { key: "tractor_hidro", label: "Tractor con Hidrogrúa",          formUrl: "https://forms.gle/REEMPLAZAR_TRACTOR_HIDROGRUA" },
+      { key: "tractor",       label: "Tractor",                        formUrl: "https://forms.gle/REEMPLAZAR_TRACTOR" },
+      { key: "semi",          label: "Semi",                           formUrl: "https://forms.gle/REEMPLAZAR_SEMI" },
+      { key: "hidrocateo",    label: "Equipo de Hidrocateo",           formUrl: "https://forms.gle/REEMPLAZAR_HIDROCATEO" },
+      { key: "portavolquete", label: "Portavolquete (Simple / Doble)", formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSdb4MQuDbuJF01FvPhvHZiuTPj4VdvFt2UuAD4sy4EBwo9HSA/viewform?usp=dialog" },
+      { key: "pickup",        label: "Pick Up",                        formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSc8rsibIvTFdqQ-MTl6gsD_wf4A7nbWM6Or5NBqXiORxqBS6w/viewform" },
+      { key: "minipala",      label: "Minipala",                       formUrl: "https://forms.gle/REEMPLAZAR_MINIPALA" },
+      { key: "caldera",       label: "Caldera",                        formUrl: "https://forms.gle/REEMPLAZAR_CALDERA" },
+      { key: "cisterna",      label: "Cisterna",                       formUrl: "https://forms.gle/REEMPLAZAR_CISTERNA" }
+    ];
 
     const grid = document.getElementById("buttonsGrid");
     document.getElementById("year").textContent = new Date().getFullYear();
