@@ -42,16 +42,7 @@
         <p class="text-m text-slate-500">Seleccioná el tipo de vehículo/equipo</p>
       </div>
 
-      <button
-        id="howtoBtn"
-        class="rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-800 active:scale-[0.99] transition"
-        type="button"
-      >
-        ¿Dónde cambio links?
-      </button>
-    </div>
-  </header>
-      
+     
     </div>
   </header>
 
@@ -158,18 +149,6 @@
 
     const grid = document.getElementById("buttonsGrid");
     document.getElementById("year").textContent = new Date().getFullYear();
-
-    // Modal
-    const howtoBtn = document.getElementById("howtoBtn");
-    const modalBackdrop = document.getElementById("modalBackdrop");
-    const modalClose = document.getElementById("modalClose");
-    const modalOk = document.getElementById("modalOk");
-    function openModal(){ modalBackdrop.classList.remove("hidden"); }
-    function closeModal(){ modalBackdrop.classList.add("hidden"); }
-    howtoBtn.addEventListener("click", openModal);
-    modalClose.addEventListener("click", closeModal);
-    modalOk.addEventListener("click", closeModal);
-    modalBackdrop.addEventListener("click", (e) => { if (e.target === modalBackdrop) closeModal(); });
 
     function renderButtons(list) {
       grid.innerHTML = "";
