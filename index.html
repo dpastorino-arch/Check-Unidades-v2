@@ -131,7 +131,7 @@
     </div>
   </footer>
 
-  <script>
+    <script>
     // Unidades en array (mantenible)
     const UNITS = [
       { key: "alto_vacio",    label: "Equipo Alto Vacío",              formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSfZu9ci0fnLfEzxMKa-czul54DPbc30Z16LkeQfil-cpn9s6w/viewform" },
@@ -151,11 +151,14 @@
     document.getElementById("year").textContent = new Date().getFullYear();
 
     function renderButtons(list) {
+      if (!grid) {
+        console.error("No se encontró #buttonsGrid");
+        return;
+      }
       grid.innerHTML = "";
       list.forEach(u => {
         const a = document.createElement("a");
         a.href = u.formUrl;
-        // Se abre en pestaña nueva para que el menú quede disponible
         a.target = "_blank";
         a.rel = "noopener noreferrer";
         a.className = [
@@ -169,32 +172,27 @@
         grid.appendChild(a);
       });
     }
+
     renderButtons(UNITS);
-    
-<script>
-  // PWA: Service Worker (evitar "web vieja")
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", async () => {
-      try {
-        const reg = await navigator.serviceWorker.register("./sw.js", {
-          updateViaCache: "none"
-        });
 
-        // Fuerza chequeo de update al cargar
-        reg.update();
+    // PWA: Service Worker (evitar "web vieja")
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", async () => {
+        try {
+          const reg = await navigator.serviceWorker.register("./sw.js", { updateViaCache: "none" });
+          reg.update();
 
-        // Si un SW nuevo toma control, recargar para ver la versión nueva
-        let refreshing = false;
-        navigator.serviceWorker.addEventListener("controllerchange", () => {
-          if (refreshing) return;
-          refreshing = true;
-          window.location.reload();
-        });
-
-      } catch (e) {
-        console.warn("SW no registrado:", e);
-      }
-    });
-  }
-</script>
-
+          let refreshing = false;
+          navigator.serviceWorker.addEventListener("controllerchange", () => {
+            if (refreshing) return;
+            refreshing = true;
+            window.location.reload();
+          });
+        } catch (e) {
+          console.warn("SW no registrado:", e);
+        }
+      });
+    }
+  </script>
+</body>
+</html>
