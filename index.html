@@ -170,14 +170,31 @@
       });
     }
     renderButtons(UNITS);
+    
+<script>
+  // PWA: Service Worker (evitar "web vieja")
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", async () => {
+      try {
+        const reg = await navigator.serviceWorker.register("./sw.js", {
+          updateViaCache: "none"
+        });
 
-    // PWA: Service Worker (cache básico del app shell)
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", async () => {
-        try { await navigator.serviceWorker.register("./sw.js"); }
-        catch (e) { console.warn("SW no registrado:", e); }
-      });
-    }
-  </script>
-</body>
-</html>
+        // Fuerza chequeo de update al cargar
+        reg.update();
+
+        // Si un SW nuevo toma control, recargar para ver la versión nueva
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener("controllerchange", () => {
+          if (refreshing) return;
+          refreshing = true;
+          window.location.reload();
+        });
+
+      } catch (e) {
+        console.warn("SW no registrado:", e);
+      }
+    });
+  }
+</script>
+
