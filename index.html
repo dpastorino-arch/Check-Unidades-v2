@@ -175,24 +175,32 @@
 
     renderButtons(UNITS);
 
-    // PWA: Service Worker (evitar "web vieja")
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", async () => {
-        try {
-          const reg = await navigator.serviceWorker.register("./sw.js", { updateViaCache: "none" });
-          reg.update();
-
-          let refreshing = false;
-          navigator.serviceWorker.addEventListener("controllerchange", () => {
-            if (refreshing) return;
-            refreshing = true;
-            window.location.reload();
-          });
-        } catch (e) {
-          console.warn("SW no registrado:", e);
-        }
+    // PWA: Service Worker (update forzado + recarga automática)
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", async () => {
+    try {
+      const reg = await navigator.serviceWorker.register("sw.js", {
+        updateViaCache: "none"
       });
+
+      // 1) Chequea update al cargar
+      await reg.update();
+
+      // 2) Chequea update periódicamente (cada 60 segundos)
+      setInterval(() => {
+        reg.update().catch(() => {});
+      }, 60 * 1000);
+
+      // 3) Si un SW nuevo toma control, recargar para tomar la última versión
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        if (refreshing) return;
+        refreshing = true;
+        window.location.reload();
+      });
+
+    } catch (e) {
+      console.warn("SW no registrado:", e);
     }
-  </script>
-</body>
-</html>
+  });
+}
