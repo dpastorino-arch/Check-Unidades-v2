@@ -1,9 +1,10 @@
-/* sw.js — PWA sin “web vieja”
-   - HTML/navigation: NETWORK FIRST (siempre intenta traer última)
+/* sw.js — PWA “siempre última versión”
+   - HTML / navegación: NETWORK FIRST (evita web vieja)
    - Assets: CACHE FIRST
+   - Versionado: cambia CACHE_VERSION por release
 */
 
-const CACHE_VERSION = "v2026-01-23_01"; // <- CAMBIAR en cada publicación importante
+const CACHE_VERSION = "v2026-02-25_01";  // <-- CAMBIÁ ESTO EN CADA PUBLICACIÓN
 const STATIC_CACHE = `static-${CACHE_VERSION}`;
 
 const STATIC_ASSETS = [
@@ -11,9 +12,8 @@ const STATIC_ASSETS = [
   "./index.html",
   "./manifest.webmanifest",
   "./LOGO%20VDS.jpeg",
-  // Si tus íconos están en /icons, agregalos aquí (ajusta nombres reales):
-  // "./icons/icon-192.png",
-  // "./icons/icon-512.png",
+  "./icons/icon-192.png",
+  "./icons/icon-512.png",
 ];
 
 self.addEventListener("install", (event) => {
@@ -39,7 +39,7 @@ self.addEventListener("fetch", (event) => {
 
   const url = new URL(req.url);
 
-  // 1) NETWORK FIRST para navegación / HTML
+  // NETWORK FIRST para HTML / navegación
   const isHTML =
     req.mode === "navigate" ||
     (req.headers.get("accept") || "").includes("text/html") ||
@@ -48,13 +48,13 @@ self.addEventListener("fetch", (event) => {
   if (isHTML) {
     event.respondWith((async () => {
       try {
-        // no-store: fuerza ir a red, no al cache HTTP
+        // Fuerza ir a red, no al HTTP cache
         const fresh = await fetch(req, { cache: "no-store" });
         const cache = await caches.open(STATIC_CACHE);
         cache.put(req, fresh.clone());
         return fresh;
       } catch (e) {
-        // Offline / falla red: usar caché
+        // Sin red: usa caché
         const cached = await caches.match(req);
         return cached || caches.match("./index.html");
       }
@@ -62,7 +62,7 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // 2) CACHE FIRST para assets (imagenes, etc.)
+  // CACHE FIRST para assets
   event.respondWith((async () => {
     const cached = await caches.match(req);
     if (cached) return cached;
