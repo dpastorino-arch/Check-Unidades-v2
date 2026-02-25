@@ -131,7 +131,8 @@
     </div>
   </footer>
 
-    <script>
+   <script>
+  document.addEventListener("DOMContentLoaded", () => {
     // Unidades en array (mantenible)
     const UNITS = [
       { key: "alto_vacio",    label: "Equipo Alto Vacío",              formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSfZu9ci0fnLfEzxMKa-czul54DPbc30Z16LkeQfil-cpn9s6w/viewform" },
@@ -148,59 +149,51 @@
     ];
 
     const grid = document.getElementById("buttonsGrid");
-    document.getElementById("year").textContent = new Date().getFullYear();
+    const year = document.getElementById("year");
 
-    function renderButtons(list) {
-      if (!grid) {
-        console.error("No se encontró #buttonsGrid");
-        return;
-      }
-      grid.innerHTML = "";
-      list.forEach(u => {
-        const a = document.createElement("a");
-        a.href = u.formUrl;
-        a.target = "_blank";
-        a.rel = "noopener noreferrer";
-        a.className = [
-          "flex items-center justify-center text-center",
-          "rounded-2xl bg-slate-900 text-white",
-          "py-7 px-4 text-lg font-semibold",
-          "hover:bg-slate-800 transition",
-          "active:scale-[0.99]"
-        ].join(" ");
-        a.textContent = u.label;
-        grid.appendChild(a);
-      });
+    if (year) year.textContent = new Date().getFullYear();
+
+    if (!grid) {
+      console.error("No se encontró el contenedor #buttonsGrid (ID cambiado o faltante).");
+      return;
     }
 
-    renderButtons(UNITS);
-
-    // PWA: Service Worker (update forzado + recarga automática)
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", async () => {
-    try {
-      const reg = await navigator.serviceWorker.register("sw.js", {
-        updateViaCache: "none"
-      });
-
-      // 1) Chequea update al cargar
-      await reg.update();
-
-      // 2) Chequea update periódicamente (cada 60 segundos)
-      setInterval(() => {
-        reg.update().catch(() => {});
-      }, 60 * 1000);
-
-      // 3) Si un SW nuevo toma control, recargar para tomar la última versión
-      let refreshing = false;
-      navigator.serviceWorker.addEventListener("controllerchange", () => {
-        if (refreshing) return;
-        refreshing = true;
-        window.location.reload();
-      });
-
-    } catch (e) {
-      console.warn("SW no registrado:", e);
-    }
+    grid.innerHTML = "";
+    UNITS.forEach(u => {
+      const a = document.createElement("a");
+      a.href = u.formUrl;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.className = [
+        "flex items-center justify-center text-center",
+        "rounded-2xl bg-slate-900 text-white",
+        "py-7 px-4 text-lg font-semibold",
+        "hover:bg-slate-800 transition",
+        "active:scale-[0.99]"
+      ].join(" ");
+      a.textContent = u.label;
+      grid.appendChild(a);
+    });
   });
-}
+
+  // PWA: Service Worker (update forzado + recarga automática)
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", async () => {
+      try {
+        const reg = await navigator.serviceWorker.register("sw.js", { updateViaCache: "none" });
+
+        await reg.update();
+        setInterval(() => { reg.update().catch(() => {}); }, 60 * 1000);
+
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener("controllerchange", () => {
+          if (refreshing) return;
+          refreshing = true;
+          window.location.reload();
+        });
+      } catch (e) {
+        console.warn("SW no registrado:", e);
+      }
+    });
+  }
+</script>
